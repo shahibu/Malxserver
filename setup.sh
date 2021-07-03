@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # This script is intended to set up your debian-based Linux distributions with web development solution.
-# The script takes further steps by install Apache + PHP + MySQL/MariaDB. 
+# The script takes further steps by install Apache + PHP + MySQL/MariaDB.
 #
 # Copyright (C) 2021 Malxserver Version: 1.0
 #
@@ -24,15 +24,15 @@
 # Show program banner
 # ===================================================================
 
-banner() { 
-  
+banner() {
+
 cat << "EOF"
-  __  __           _                                                    
- |  \/  |         | |                                                   
- | \  / |   __ _  | | __  __  ___    ___   _ __  __   __   ___   _ __   
- | |\/| |  / _` | | | \ \/ / / __|  / _ \ | '__| \ \ / /  / _ \ | '__|  
- | |  | | | (_| | | |  >  <  \__ \ |  __/ | |     \ V /  |  __/ | |     
- |_|  |_|  \__,_| |_| /_/\_\ |___/  \___| |_|      \_/    \___| |_|                                                                    
+  __  __           _
+ |  \/  |         | |
+ | \  / |   __ _  | | __  __  ___    ___   _ __  __   __   ___   _ __
+ | |\/| |  / _` | | | \ \/ / / __|  / _ \ | '__| \ \ / /  / _ \ | '__|
+ | |  | | | (_| | | |  >  <  \__ \ |  __/ | |     \ V /  |  __/ | |
+ |_|  |_|  \__,_| |_| /_/\_\ |___/  \___| |_|      \_/    \___| |_|
 
     Malxserver Version: 1.0
   -------------------------------------------------------
@@ -61,7 +61,7 @@ check_root(){
           echo "\n$RED[!] This script must be run as root$ENDC\n" >&2
           exit 1
         fi
- 
+
 }
 
 
@@ -70,9 +70,9 @@ check_root(){
 # ===================================================================
 # Check operating system stability
 # ===================================================================
-# 
+#
 setup_dev(){
-    apt-get update 
+    apt-get update
     apt-get upgrade
 }
 
@@ -81,22 +81,22 @@ install_apache()
   #Install Apache
         echo "\n$PURPLE☐  Start Installing ............ $ENDC\n"
         apt install -y apache2 apache2-utils
-        systemctl enable apache2 
-        systemctl start apache2 
+        systemctl enable apache2
+        systemctl start apache2
         msg_apache=$(apache2 -v)
         echo "$GREEN☑$ENDC : $msg_apache"
         chown www-data:www-data /var/www/html/ -R
-        cp ./_locales/servername.conf /etc/apache2/conf-available/servername.conf 
-        sudo a2enconf servername.conf 
-        systemctl reload apache2 
+        cp ./_locales/servername.conf /etc/apache2/conf-available/servername.conf
+        sudo a2enconf servername.conf
+        systemctl reload apache2
 }
 
 # Install MariaDB
 install_database(){
         echo "\n$PURPLE☐  Install MariaDB Database Servers ... $ENDC\n"
-        apt install mariadb-server mariadb-client 
+        apt install mariadb-server mariadb-client
         systemctl enable mariadb
-        systemctl start mariadb 
+        systemctl start mariadb
         msg_mariandb=$(mariadb --version)
        echo "$GREEN☑$ENDC : $msg_mariandb"
 }
@@ -104,21 +104,16 @@ install_database(){
 # Install PHP 7.4 stable
 install_php(){
   echo "\n$PURPLE☐  Install PHP stable ... $ENDC\n"
-  apt install php7.4 libapache2-mod-php7.4 php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline 
-  a2enmod php7.4 
-  systemctl restart apache2 
-  a2dismod php7.4 
-  cp ./_locales/info.php /var/www/html/info.php 
-  apt install php7.4-fpm 
-  a2enmod proxy_fcgi setenvif 
-  a2enconf php7.4-fpm 
-  systemctl restart apache2 
+  apt install php7.4 libapache2-mod-php7.4 php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline
+  a2enmod php7.4
+  systemctl restart apache2
+  a2dismod php7.4
+  cp ./_locales/info.php /var/www/html/info.php
+  systemctl restart apache2
   msg_php=$(php --version)
        echo "$GREEN☑$ENDC : $msg_php"
 
 }
-
-
 
 # ===================================================================
 # Initialization setup
@@ -128,8 +123,8 @@ case $(uname -m) in
 x86_64)
     banner
     check_root
-    setup_dev 
-    install_apache 
+    setup_dev
+    install_apache
     install_database
     install_php
     ;;
@@ -137,7 +132,7 @@ x86_64)
 *)
     banner
           echo "\n$RED[!] This program runs on Intel/AMD 32-bit x86 and 64-bit x64 processors only. $ENDC\n" >&2
-         
+
           exit 1
     exit 1
     ;;
