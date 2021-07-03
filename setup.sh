@@ -85,9 +85,9 @@ install_apache()
         systemctl start apache2
         msg_apache=$(apache2 -v)
         echo "$GREEN☑$ENDC : $msg_apache"
-        chown www-data:www-data /var/www/html/ -R
-        cp ./_locales/servername.conf /etc/apache2/conf-available/servername.conf
-        sudo a2enconf servername.conf
+        mkdir /malxserver
+        cp servername.conf /etc/apache2/conf-available/servername.conf
+        a2enconf servername.conf
         systemctl reload apache2
 }
 
@@ -108,8 +108,19 @@ install_php(){
   a2enmod php7.4
   systemctl restart apache2
   a2dismod php7.4
-  cp ./_locales/info.php /var/www/html/info.php
+  cp htdocs /malxserver
+  chmod -R 755 /malxserver/htdocs
   systemctl restart apache2
+  msg_php=$(php --version)
+       echo "$GREEN☑$ENDC : $msg_php"
+
+}
+# Install phpMyAdmin stable
+install_phpmyadmin(){
+  echo "\n$PURPLE☐  Install phpMyAdmin stable ... $ENDC\n"
+  apt install phpmyadmin
+  ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-available/phpmyadmin.conf
+  systemctl reload apache2
   msg_php=$(php --version)
        echo "$GREEN☑$ENDC : $msg_php"
 
@@ -127,6 +138,7 @@ x86_64)
     install_apache
     install_database
     install_php
+    install_phpmyadmin
     ;;
 
 *)
