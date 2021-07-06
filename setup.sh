@@ -107,9 +107,8 @@ install_php(){
   apt install php7.4 libapache2-mod-php7.4 php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline
   a2enmod php7.4
   systemctl restart apache2
-  a2dismod php7.4
   cp htdocs /malxserver
-  chmod -R 755 /malxserver/htdocs
+  chmod -R 777 /malxserver/htdocs
   systemctl restart apache2
   msg_php=$(php --version)
        echo "$GREEN☑$ENDC : $msg_php"
